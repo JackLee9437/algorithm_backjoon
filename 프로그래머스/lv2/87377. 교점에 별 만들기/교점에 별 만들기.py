@@ -1,5 +1,6 @@
 def solution(line):
     intersections = set()
+    left, right, top, bottom = float('inf'), -float('inf'), -float('inf'), float('inf')
     for i in range(len(line)-1) :
         for j in range(i+1, len(line)) :
             A, B, E = line[i]
@@ -10,21 +11,21 @@ def solution(line):
                 if x == int(x) :
                     y = (E*C-A*F)/denominator
                     if y == int(y) :
-                        intersections.add((int(x), int(y)))
+                        x, y = int(x), int(y)
+                        left, right, top, bottom = min(left, x), max(right, x), max(top, y), min(bottom, y)
+                        intersections.add((x, y))
     buf = []
-    leftmin, _ = min(intersections, key=lambda x: x[0])
-    _, bottommin = min(intersections, key=lambda x: x[1])
-    rightmax = 0
-    upmax = 0
     for intersection in intersections :
-        x = intersection[0]-leftmin
-        y = intersection[1]-bottommin
+        x = intersection[0]-left
+        y = intersection[1]-bottom
         buf.append((x, y))
-        rightmax = max(rightmax, x)
-        upmax = max(upmax, y)
+    right -= left
+    left = 0
+    top -= bottom
+    bottom = 0
     
-    answer = [['.' for _ in range(rightmax+1)] for __ in range(upmax+1)]
+    answer = [['.' for _ in range(right+1)] for __ in range(top+1)]
     for x, y in buf :
-        answer[upmax-y][x] = '*'
+        answer[top-y][x] = '*'
         
     return list(map(lambda x : ''.join(x), answer))
