@@ -1,39 +1,24 @@
 def solution(dirs):
-    visitedX = [[0] * 10 for _ in range(11)]
-    visitedY = [[0] * 11 for _ in range(10)]
+    dirx = {
+        "U" : (-1, 0),
+        "D" : (1, 0),
+        "L" : (0, -1),
+        "R" : (0, 1)
+    }
     
     answer = 0
-    r, c = 5, 5
-    for dirx in dirs :
-        if dirx == "D" :
-            if r == 10 :
-                continue
-            if not visitedY[r][c] :
-                visitedY[r][c] = 1
-                answer += 1
-            r += 1
-        elif dirx == "U" :
-            if r == 0 :
-                continue
-            if not visitedY[r-1][c] :
-                visitedY[r-1][c] = 1
-                answer += 1
-            r -= 1
-        elif dirx == "L" :
-            if c == 0 :
-                continue
-            if not visitedX[r][c-1] :
-                visitedX[r][c-1] = 1
-                answer += 1
-            c -= 1
-        else :
-            if c == 10 :
-                continue
-            if not visitedX[r][c] :
-                visitedX[r][c] = 1
-                answer += 1
-            c += 1
+    routes = set()
+    r, c = 0, 0
+    for d in dirs :
+        dr, dc = dirx[d]
+        if not (-5 <= r + dr <= 5 and -5 <= c + dc <= 5) :
+            continue
+        routes.add((r,c,r+dr,c+dc))
+        routes.add((r+dr,c+dc,r,c))
+        r += dr
+        c += dc
     
+    answer = len(routes) // 2
     return answer
     
     
